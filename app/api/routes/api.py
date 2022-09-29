@@ -1,7 +1,6 @@
 from fastapi import APIRouter
-
-from app.api.routes import message
+from app.api.routes import operations
 
 router = APIRouter()
 
-router.include_router(message.router, tags=["message"], prefix="/message")
+router.include_router(operations.router, prefix="/operations")
