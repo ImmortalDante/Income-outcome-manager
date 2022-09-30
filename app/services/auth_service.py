@@ -1,14 +1,22 @@
-import datetime
 from fastapi import HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from passlib.hash import bcrypt
 from pydantic import ValidationError
+from pydantic.schema import timedelta, datetime
 from sqlalchemy.orm import Session
 
 from app.db.database import get_session
 from app.models.auth import UserModel, Token, UserCreate
 import config
 from app.db import tables
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/sign-in")
+
+
+def get_current_user(token: str = Depends(oauth2_scheme)) -> UserModel:
+	return AuthService.validate_token(token)
 
 
 class AuthService:
@@ -23,7 +31,7 @@ class AuthService:
 	@classmethod
 	def validate_token(cls, token: str) -> UserModel:
 		exception = HTTPException(
-			status_code=status.HTTP_404_NOT_FOUND,
+			status_code=status.HTTP_401_UNAUTHORIZED,
 			detail="Could not validate credentials",
 			headers={
 				"WWW-Authenticate": "Bearer"
@@ -47,11 +55,11 @@ class AuthService:
 	@classmethod
 	def create_token(cls, user: tables.User) -> Token:
 		user_data = UserModel.from_orm(user)
-		now = datetime.date.today()
+		now = datetime.utcnow()
 		payload = {
 			"iat": now,
 			"nbf": now,
-			'exp': now + datetime.timedelta(seconds=3600),
+			'exp': now + timedelta(seconds=3600),
 			"sub": str(user_data.id),
 			"user": user_data.dict(),
 		}
