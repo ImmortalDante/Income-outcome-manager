@@ -18,5 +18,9 @@ class OperationModel(OperationBase):
 	id: int
 
 
+class OperationUpdate(OperationBase):
+	pass
+
+
 class OperationCreate(OperationBase):
-	...
+	pass
