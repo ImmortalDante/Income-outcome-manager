@@ -4,8 +4,7 @@ from decimal import Decimal
 from app.services.model_enum import OperationKind
 
 
-class OperationModel(BaseModel):
-	id: int
+class OperationBase(BaseModel):
 	date: date
 	kind: OperationKind
 	amount: Decimal
@@ -13,3 +12,11 @@ class OperationModel(BaseModel):
 
 	class Config:
 		orm_mode = True
+
+
+class OperationModel(OperationBase):
+	id: int
+
+
+class OperationCreate(OperationBase):
+	...
