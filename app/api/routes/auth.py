@@ -22,4 +22,5 @@ def sign_in(
 
 @router.get("/user", response_model=UserModel)
 def get_user(user: UserModel = Depends(get_current_user)):
+	"""Получение текущего пользователя"""
 	return user

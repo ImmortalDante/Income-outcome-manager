@@ -15,6 +15,10 @@ def get_operation_by_kind(
         user: UserModel = Depends(get_current_user),
         service: operations_services.OperationsService = Depends()
 ):
+    """
+    Получение операций по их виду.
+    - **kind**: Фильтр по виду операций
+    """
     return service.get_list(user_id=user.id, kind=kind)
 
 
