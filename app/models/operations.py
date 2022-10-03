@@ -1,6 +1,7 @@
+from decimal import Decimal
+
 from pydantic import BaseModel, validator, ValidationError
 from datetime import date
-from decimal import Decimal
 from app.services.model_enum import OperationKind
 
 

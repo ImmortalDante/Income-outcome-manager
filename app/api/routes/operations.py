@@ -32,6 +32,15 @@ def get_operation_by_id(
     return service.get_operation(user_id=user.id, operation_id=operation_id)
 
 
+@router.get("/statistic/{month}")
+def get_statistic(
+        month: int,
+        user: UserModel = Depends(get_current_user),
+        service: operations_services.OperationsService = Depends()
+):
+    return {"total_profit": service.get_month_statistic(user_id=user.id, month=month)}
+
+
 @router.put("/{operation_id}", response_model=OperationModel)
 def update_operation(
         operation_id: int,

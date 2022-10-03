@@ -38,6 +38,13 @@ class OperationsService:
 		operations = query.all()
 		return operations
 
+	def get_month_statistic(self, user_id: int, month: int):
+		operations = self.get_list(user_id=user_id, month=month)
+		income = [operation.amount for operation in operations if operation.kind == "income"]
+		outcome = [operation.amount for operation in operations if operation.kind == "outcome"]
+		result = sum(income) - sum(outcome)
+		return result
+
 	def get_operation(self, user_id: int, operation_id: int) -> tables.Operation:
 		return self._get(user_id, operation_id)
 
