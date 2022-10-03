@@ -10,16 +10,18 @@ router = APIRouter()
 
 
 @router.get("", response_model=List[OperationModel])
-def get_operation_by_kind(
+def get_operation(
         kind: model_enum.OperationKind | None = None,
+        month: str | None = None,
         user: UserModel = Depends(get_current_user),
         service: operations_services.OperationsService = Depends()
 ):
     """
-    Получение операций по их виду.
+    Получение операций по их виду и/или месяцу.
     - **kind**: Фильтр по виду операций
+    - **month**: Фильтр по номеру месяца
     """
-    return service.get_list(user_id=user.id, kind=kind)
+    return service.get_list(user_id=user.id, kind=kind, month=month)
 
 
 @router.get("/{operation_id}", response_model=OperationModel)

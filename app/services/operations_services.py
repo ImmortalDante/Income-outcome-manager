@@ -1,4 +1,5 @@
 from fastapi import Depends
+from sqlalchemy import extract
 from sqlalchemy.orm import Session
 
 from app.db import database, tables
@@ -14,10 +15,26 @@ class OperationsService:
 		operation = self.session.query(tables.Operation).filter_by(id=operation_id, user_id=user_id).first()
 		return operation
 
-	def get_list(self, user_id: int, kind: OperationKind | None = None) -> list[tables.Operation]:
-		query = self.session.query(tables.Operation).filter_by(user_id=user_id)
-		if kind:
+	def get_list(
+			self,
+			user_id: int,
+			kind: OperationKind | None = None,
+			month: str | None = None,
+	) -> list[tables.Operation]:
+		query = self.session.query(tables.Operation)
+		if kind and not month:
 			query = query.filter_by(kind=kind)
+		elif kind and month:
+			query = query.filter(
+				tables.Operation.user_id == user_id,
+				tables.Operation.kind == kind,
+				extract("month", tables.Operation.date) == int(month)
+			)
+		elif month and not kind:
+			query = query.filter(
+				tables.Operation.user_id == user_id,
+				extract("month", tables.Operation.date) == int(month)
+			)
 		operations = query.all()
 		return operations
 
