@@ -30,10 +30,13 @@ class ReportService:
 
 		self.operation_service.create_many(user_id=user_id, operations_data=operations)
 
-	def export_csv(self, user_id: int) -> Any:
+	def export_csv(self, user_id: int, month: str | None = None) -> Any:
 		output = StringIO()
 		writer = csv.DictWriter(output, fieldnames=["date", "kind", "amount", "description"], extrasaction="ignore")
-		operations = self.operation_service.get_list(user_id)
+		if month:
+			operations = self.operation_service.get_list(user_id=user_id, month=month)
+		else:
+			operations = self.operation_service.get_list(user_id)
 		writer.writeheader()
 		for operation in operations:
 			operation_data = OperationModel.from_orm(operation)

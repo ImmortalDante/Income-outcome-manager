@@ -21,9 +21,10 @@ def import_csv(
 @router.get("/export")
 def export_csv(
 		user: UserModel = Depends(get_current_user),
-		reports_service: ReportService = Depends()
+		reports_service: ReportService = Depends(),
+		month: str | None = None,
 ):
-	report = reports_service.export_csv(user_id=user.id)
+	report = reports_service.export_csv(user_id=user.id, month=month)
 	return StreamingResponse(report, media_type="text/csv", headers={
 		"Content-Disposition": "attachment; filename=report.csv"
 	})
