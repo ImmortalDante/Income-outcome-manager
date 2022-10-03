@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter, Depends, Response, status
 
 from app.models.auth import UserModel
@@ -9,10 +8,10 @@ from app.services.auth_service import get_current_user
 router = APIRouter()
 
 
-@router.get("", response_model=List[OperationModel])
+@router.get("", response_model=list[OperationModel])
 def get_operation(
         kind: model_enum.OperationKind | None = None,
-        month: str | None = None,
+        month: int | None = None,
         user: UserModel = Depends(get_current_user),
         service: operations_services.OperationsService = Depends()
 ):

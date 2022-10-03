@@ -19,7 +19,7 @@ class OperationsService:
 			self,
 			user_id: int,
 			kind: OperationKind | None = None,
-			month: str | None = None,
+			month: int | None = None,
 	) -> list[tables.Operation]:
 		query = self.session.query(tables.Operation)
 		if kind and not month:
@@ -28,12 +28,12 @@ class OperationsService:
 			query = query.filter(
 				tables.Operation.user_id == user_id,
 				tables.Operation.kind == kind,
-				extract("month", tables.Operation.date) == int(month)
+				extract("month", tables.Operation.date) == month
 			)
 		elif month and not kind:
 			query = query.filter(
 				tables.Operation.user_id == user_id,
-				extract("month", tables.Operation.date) == int(month)
+				extract("month", tables.Operation.date) == month
 			)
 		operations = query.all()
 		return operations
